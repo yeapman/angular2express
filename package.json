@@ -25,10 +25,11 @@
     "core-js": "^2.4.1",
     "express": "^4.15.2",
     "moment": "^2.17.1",
+    "mongodb": "^2.2.24",
     "rxjs": "^5.1.0",
-    "zone.js": "^0.7.6",
     "swagger-express-mw": "^0.1.0",
-    "swagger-tools": "^0.10.1"
+    "swagger-tools": "^0.10.1",
+    "zone.js": "^0.7.6"
   },
   "devDependencies": {
     "@angular/cli": "1.0.0-rc.1",
