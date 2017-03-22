@@ -8,7 +8,15 @@ var url = 'mongodb://localhost:27017/client';
 
 // define the about route
 router.get('/about', function (req, res) {
-  res.send('About birds')
+  var responseJson = {
+    "data": [
+      {
+        "first_name": "yarik",
+      "second_name": "fonarik"
+      }
+    ]
+  };
+  res.json(responseJson);
 });
 
 MongoClient.connect(url, function(err, db) {
