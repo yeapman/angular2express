@@ -5,33 +5,26 @@ var MongoClient = require('mongodb').MongoClient
 var url = 'mongodb://localhost:27017/client';
 var ObjectId = require('mongodb').ObjectID;
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 // middleware that is specific to this router
-var person = new Schema({
-  data2: {type: Object, required: true }
-});
+
 
 // define the about route
-router.get('/about', function (req, res) {
-  // var responseJson = {
-  //   "data": [
-  //     {
-  //       "first_name": "yarik",
-  //     "second_name": "fonarik"
-  //     }
-  //   ]
-  // };
-  res.json(responseJson);
-});
+
 
 MongoClient.connect(url, function(err, db) {
   // assert.equal(null, err);
   console.log("connected successfull to server");
 
+  //
+  //  findDocuments(db, function() {
+  //   db.close();
+  // });
 
-  findDocuments(db, function() {
+  findById(db, function() {
     db.close();
   });
+  if (err) return console.log(err);
+  require('./note_routes')(express,db);
 
   // deleteDocument(db, function() {
   //   db.close();
@@ -43,42 +36,72 @@ MongoClient.connect(url, function(err, db) {
   //   db.close();
   // });
 
-// insertDocuments(db, function() {
-//   db.close();
-// });
+  // insertDocuments(db, function() {
+  //   db.close();
+  // });
 
+});
+
+
+
+router.get('/about', function (req, res) {
+  // var responseJson = {
+  //   "data": [
+  //     {
+  //       "first_name": "yarik",
+  //     "second_name": "fonarik"
+  //     }
+  //   ]
+  // };
 });
 
 
 // var insertDocuments = function(db, callback) {
 //   var collection = db.collection('levindb');
-//   collection.insertMany([
-//     { "data2":
-//       {
-//         'first_name': 'yarik',
-//         'last_name': 'levin',
-//         'age': 22
-//     }
-//     }
-//   ], function (err, result) {
-//
+//   var userYarik = {
+//         "name": "yariiiiiik",
+//         "sname": "leviiiiin"
+//   };
+//   collection.insertOne(userYarik, function (err, result) {
 //     console.log("inserted 1 documents into the collection");
 //     callback(result);
 //   });
-// })
+// };
 
-var findDocuments = function(db, callback) {
+// var findDocuments = function(db, callback) {
+//    var collection = db.collection('levindb');
+//
+//      collection.find({}).toArray(function(err, docs) {
+//           assert.equal(err, null);
+//           console.log("found this document");
+//           console.log(docs);
+//           callback(docs);
+//         })
+//   }
+
+
+  var findById = function(db, callback) {
+    var collection = db.collection('levindb');
+
+    collection.findOne({ "_id": ObjectId("58d2817e29090203700aff11")}, function(err, docs) {
+    assert.equal(err, null);
+    console.log("found 1 doc");
+    console.log(docs);
+    callback(docs);
+    })
+  }
+
+var myNewCallback = function(db, callback) {
   var collection = db.collection('levindb');
 
-  collection.findOne({'data2': {}},(function(err, doc) {
-    assert.equal(err, null);
-    console.log("found this document");
-    assert.equal(null, doc.first_name);
-    assert.equal(2, doc.last_name);
-}));
-};
-
-
+  collection.findOne({ "_id": ObjectId("58d2817e29090203700aff11")}, function(err, docs) {
+    if(err) {
+      res.send('error, fuck')
+    } else {
+      res.send(docs);
+    }
+  })
+}
 // var findData = function(db, callback) {
 //   var collection = db.collection('levindb');
 //
@@ -101,4 +124,4 @@ var findDocuments = function(db, callback) {
 
 
 
-  module.exports = router;
+  module.exports = router
