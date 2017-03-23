@@ -2,29 +2,65 @@ var express = require('express');
 var router = express.Router();
 var MongoClient = require('mongodb').MongoClient
   , assert = require('assert');
+var db;
+const bodyParser = require('body-parser');
 var url = 'mongodb://localhost:27017/client';
 var ObjectId = require('mongodb').ObjectID;
 var mongoose = require('mongoose');
+const app = express();
 // middleware that is specific to this router
+var mongoDB = 'mongodb://localhost:27017/client';
 
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+mongoose.model('users', {first_name: String});
 // define the about route
+router.get('/about', function (req, res) {
+  // var responseJson = {
+  //   "data": [
+  //     {
+  //       "first_name": "yarik",
+  //     "second_name": "fonarik"
+  //     }
+  //   ]
+  // };
+
+  mongoose.model('users').find(function(err, users){
+    res.send(users);
+  })
+});
+
+  router.get('/artist', function(req, res) {
+    db.collection('levindb').find().toArray(function(err, docs) {
+      if(err) {
+        console.log(err);
+        return res.sendStatus(500);
+      }
+      res.send(docs);
+    })
+  })
 
 
-MongoClient.connect(url, function(err, db) {
+})
+MongoClient.connect(url, function(err, database) {
   // assert.equal(null, err);
   console.log("connected successfull to server");
+if(err) {
+  return console.log(err);
+}
+db = database;
+
+
 
   //
   //  findDocuments(db, function() {
   //   db.close();
   // });
 
-  findById(db, function() {
-    db.close();
-  });
-  if (err) return console.log(err);
-  require('./note_routes')(express,db);
+  // findById(db, function() {
+  //   db.close();
+  // });
+
 
   // deleteDocument(db, function() {
   //   db.close();
@@ -44,23 +80,28 @@ MongoClient.connect(url, function(err, db) {
 
 
 
-router.get('/about', function (req, res) {
-  // var responseJson = {
-  //   "data": [
-  //     {
-  //       "first_name": "yarik",
-  //     "second_name": "fonarik"
-  //     }
-  //   ]
-  // };
-});
+
+var findById = function(db, callback) {
+  var collection = db.collection('levindb');
+
+  collection.findOne({"_id": ObjectId("58d2817e29090203700aff11")}, function(err, docs) {
+    assert.equal(err, null);
+    console.log("found 1 doc");
+    console.log(docs);
+    callback(docs);
+  })
+}
+
 
 
 // var insertDocuments = function(db, callback) {
 //   var collection = db.collection('levindb');
 //   var userYarik = {
-//         "name": "yariiiiiik",
-//         "sname": "leviiiiin"
+//     "names": [{
+//       "name": "yariiiiiik111111",
+//       "sname": "leviiiiin222222"
+//     }
+//   ]
 //   };
 //   collection.insertOne(userYarik, function (err, result) {
 //     console.log("inserted 1 documents into the collection");
@@ -80,28 +121,19 @@ router.get('/about', function (req, res) {
 //   }
 
 
-  var findById = function(db, callback) {
-    var collection = db.collection('levindb');
 
-    collection.findOne({ "_id": ObjectId("58d2817e29090203700aff11")}, function(err, docs) {
-    assert.equal(err, null);
-    console.log("found 1 doc");
-    console.log(docs);
-    callback(docs);
-    })
-  }
 
-var myNewCallback = function(db, callback) {
-  var collection = db.collection('levindb');
-
-  collection.findOne({ "_id": ObjectId("58d2817e29090203700aff11")}, function(err, docs) {
-    if(err) {
-      res.send('error, fuck')
-    } else {
-      res.send(docs);
-    }
-  })
-}
+// var myNewCallback = function(db, callback) {
+//   var collection = db.collection('levindb');
+//
+//   collection.findOne({ "_id": ObjectId("58d2817e29090203700aff11")}, function(err, docs) {
+//     if(err) {
+//       res.send('error, fuck')
+//     } else {
+//       res.send(docs);
+//     }
+//   })
+// }
 // var findData = function(db, callback) {
 //   var collection = db.collection('levindb');
 //
