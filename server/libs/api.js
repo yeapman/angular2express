@@ -6,42 +6,15 @@ var db;
 const bodyParser = require('body-parser');
 var url = 'mongodb://localhost:27017/client';
 var ObjectId = require('mongodb').ObjectID;
-var mongoose = require('mongoose');
 const app = express();
 // middleware that is specific to this router
 var mongoDB = 'mongodb://localhost:27017/client';
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-mongoose.model('users', {first_name: String});
+
 // define the about route
-router.get('/about', function (req, res) {
-  // var responseJson = {
-  //   "data": [
-  //     {
-  //       "first_name": "yarik",
-  //     "second_name": "fonarik"
-  //     }
-  //   ]
-  // };
 
-  mongoose.model('users').find(function(err, users){
-    res.send(users);
-  })
-});
-
-  router.get('/artist', function(req, res) {
-    db.collection('levindb').find().toArray(function(err, docs) {
-      if(err) {
-        console.log(err);
-        return res.sendStatus(500);
-      }
-      res.send(docs);
-    })
-  })
-
-
-})
 MongoClient.connect(url, function(err, database) {
   // assert.equal(null, err);
   console.log("connected successfull to server");
@@ -49,9 +22,6 @@ if(err) {
   return console.log(err);
 }
 db = database;
-
-
-
   //
   //  findDocuments(db, function() {
   //   db.close();
@@ -78,7 +48,16 @@ db = database;
 
 });
 
+router.get('/artist', function(req, res) {
+  db.collection('levindb').find({"_id": ObjectId("58d2817e29090203700aff11")}).toArray(function(err, docs) {
+    if(err) {
+      console.log(err);
+      return res.sendStatus(500);
+    }
+    res.send(docs);
 
+  })
+});
 
 
 var findById = function(db, callback) {
@@ -91,7 +70,6 @@ var findById = function(db, callback) {
     callback(docs);
   })
 }
-
 
 
 // var insertDocuments = function(db, callback) {
