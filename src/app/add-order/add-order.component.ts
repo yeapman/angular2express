@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {User} from "./user";
 import 'rxjs/add/operator/map'
 import {AppService} from "./add-order.service";
@@ -9,11 +9,18 @@ import {AppService} from "./add-order.service";
   styleUrls: ['./add-order.component.css']
 })
 export class AddOrderComponent implements OnInit {
-  users: User[];
-  constructor(private service: AppService) {  }
+  @Input() users: User;
+
+  constructor(private service: AppService) {}
 
   ngOnInit() {
-    this.service.getUsers()
+    // this.service.getUsers()
+    //   .subscribe(users => this.users = users);
+  }
+
+  onSubmit(): void {
+    // event.preventDefault();
+    this.service.postUsers(this.users)
       .subscribe(users => this.users = users);
   }
 }

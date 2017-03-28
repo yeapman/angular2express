@@ -20,11 +20,15 @@
 <!--<button (click)="makeRequest()">Make request</button>-->
 
 
-  <div *ngFor="let user of users">
-    <h2>{{user.name}}</h2>
-    <span>{{user.sname}}</span>
-  </div>
+  <!--<div *ngFor="let user of users">-->
+    <!--<h2>{{user.name}}</h2>-->
+    <!--<span>{{user.sname}}</span>-->
+  <!--</div>-->
 
+<form #f="ngForm" (ngSubmit)="onSubmit(f)" novalidate>
+<input name="names" [(ngModel)]="users.name" placeholder="entersomething" type="text">
+  <button>Submit</button>
+</form>
 
 <!--<pre>{{data | json }}</pre>-->
 
